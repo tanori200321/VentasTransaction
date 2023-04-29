@@ -19,6 +19,54 @@ namespace VentasTransaction
         public Frm_Productos()
         {
             InitializeComponent();
+
+            try
+            {
+                ObtenerProductos();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        // --------------- Llamado de Metodos --------------- //
+
+        // Agregado de Producto //
+        private void CrearProducto(string Nombre)
+        {
+            Productos producto = new Productos();
+
+
+
+        }
+        // Borrado de Producto //
+        private void EliminarProducto(int Id)
+        {
+            Productos producto = new Productos();
+            producto.Id = Id;
+            producto.EliminarProducto(Id);
+
+
+        }
+        // Actualizacion de Producto //
+        private void ActualizarProducto(string Descripcion, decimal PrecioUnitario)
+        {
+            Productos producto = new Productos();
+            producto.Descripcion = Descripcion;
+            producto.PrecioUnitario = PrecioUnitario;
+            producto.ActualizarProducto(producto);
+
+
+        }
+        // Mostrar Datos de la tabla //
+        private void ObtenerProductos()
+        {
+            Productos cliente = new Productos();
+            SqlDataAdapter adapter = cliente.ObtenerProductos();
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+            dataGridView1.DataSource = dt;
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -33,11 +81,6 @@ namespace VentasTransaction
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            string consulta = "select * from productos";
-            SqlDataAdapter adapter = new SqlDataAdapter(consulta, Conexion.ConnectionString);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-            dataGridView1.DataSource = dt;
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -45,22 +88,37 @@ namespace VentasTransaction
             
         }
 
+        // Actualizar Producto //
         private void button3_Click(object sender, EventArgs e)
         {
-            Productos producto = new Productos();
-            producto.Id = 1; // El ID del producto a actualizar
-            producto.Descripcion = "Nuevo nombre de producto";
-            producto.PrecioUnitario = 150.0m;
 
-            producto.ActualizarProducto(producto);
         }
 
+        // Eliminar Producto //
         private void button2_Click(object sender, EventArgs e)
         {
-            //Productos producto = new Productos();
-            //producto.EliminarProducto(txtBox.Text);
+            try
+            {
+                int Id;
+                if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out Id))
+                {
+                    Productos producto = new Productos();
+                    producto.EliminarProducto(Id);
+                    ObtenerProductos();
+                    MessageBox.Show("Producto Eliminado");
+                }
+                else
+                {
+                    MessageBox.Show("¡ERROR! no se elimino el Producto");
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
+        // Agregar Producto //
         private void button1_Click(object sender, EventArgs e)
         {
             Productos producto = new Productos();
@@ -95,11 +153,11 @@ namespace VentasTransaction
 
         }
 
+        // Seleccionar dato //
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //txtBox.Text = dataGridView1.SelectedCells[0].Value.ToString();
-            //textBox2.Text = dataGridView1.SelectedCells[1].Value.ToString();
-            //textBox3.Text = dataGridView1.SelectedCells[2].Value.ToString();
+            textBox2.Text = dataGridView1.SelectedCells[1].Value.ToString();
+            textBox3.Text = dataGridView1.SelectedCells[2].Value.ToString();
 
         }
     }

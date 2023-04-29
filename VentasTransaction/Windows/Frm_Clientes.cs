@@ -177,6 +177,7 @@ namespace VentasTransaction
 
         }
 
+        // Seleccionar dato //
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             textBox2.Text = dataGridView1.SelectedCells[1].Value.ToString();

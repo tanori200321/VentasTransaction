@@ -32,49 +32,68 @@ namespace AccesoDatos
                 throw new Exception(ex.Message);
             }
         }
+
+        // Crear Producto //
         public void CrearProducto(Productos producto)
         {
             try
             {
-                string query = "INSERT INTO Existencias" +
+                string query = "INSERT INTO Productos" +
                     "(Descripcion,PrecioUnitario) " +
                     "VALUES" +
-                    "(@Descripcion,@PrecioUnitario)";
+                    "(@Descripcion,@PrecioUnitario);select scope_identity()";
 
-                using (SqlConnection con = new SqlConnection(query))
+                using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
-                    SqlTransaction transaction = con.BeginTransaction();
+                    SqlTransaction transaction;
                     con.Open();
-
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    transaction = con.BeginTransaction();
+                    try
                     {
-                        cmd.CommandType = CommandType.Text;
-                        cmd.Transaction = transaction;
+                        using (SqlCommand cmd = new SqlCommand(query, con))
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.Transaction = transaction;
 
-                        cmd.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
-                        cmd.Parameters.AddWithValue("@PrecioUnitario", producto.PrecioUnitario);
+                            cmd.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
+                            cmd.Parameters.AddWithValue("@PrecioUnitario", producto.PrecioUnitario);
 
-                        cmd.ExecuteNonQuery();
+
+                            if (!int.TryParse(cmd.ExecuteScalar().ToString(), out int idProducto))
+                            {
+                                throw new Exception("Ocurrio un error al obtener el id del Producto");
+                            }
+                            Console.WriteLine("ID: " + idProducto);
+                            Existencias existencia = new Existencias();
+                            existencia.AgregarExistenciaEnCero(con, transaction, idProducto);
+                        }
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(ex.Message);
                     }
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new Exception(ex.Message);
+                throw new Exception(e.Message);
             }
         }
 
+        // Actualizar Producto //
         public void ActualizarProducto(Productos producto)
         {
             try
             {
-                string query = "UPDATE Existencias SET Descripcion = @Descripcion, PrecioUnitario = @PrecioUnitario WHERE Id = @Id";
+                string query = "UPDATE Productos SET Descripcion = @Descripcion, PrecioUnitario = @PrecioUnitario WHERE Id = @Id";
 
-                using (SqlConnection con = new SqlConnection(query))
+                using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
-                    SqlTransaction transaction = con.BeginTransaction();
                     con.Open();
+                    SqlTransaction transaction = con.BeginTransaction();
 
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
@@ -94,76 +113,46 @@ namespace AccesoDatos
                 throw new Exception(ex.Message);
             }
         }
+
+        // Eliminar Producto //
         public void EliminarProducto(int id)
         {
             try
             {
-                string query = "DELETE FROM Existencias where Id = @Id";
+                string query = "DELETE FROM Existencias WHERE ProductoId = @Id; DELETE FROM Productos where Id = @Id";
 
-                using (SqlConnection con = new SqlConnection(query))
-                { 
-                    SqlTransaction transaction = con.BeginTransaction();
-                    con.Open();
-
-                    using (SqlCommand cmd = new SqlCommand(query, con))
-                    {
-                        cmd.CommandType = CommandType.Text;
-                        cmd.Transaction = transaction;
-
-                        cmd.Parameters.AddWithValue("@Id", id);
-
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public Productos ObtenerProducto(int id)
-        {
-            try
-            {
-                string query = "SELECT Id, Descripcion, PrecioUnitario FROM Existencias WHERE Id = @Id";
-
-                using (SqlConnection con = new SqlConnection(query))
+                using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
                     con.Open();
+                    SqlTransaction transaction = con.BeginTransaction();
 
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
-                        cmd.CommandType = CommandType.Text;
-
-                        cmd.Parameters.AddWithValue("@Id", id);
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        try
                         {
-                            if (reader.HasRows)
-                            {
-                                while (reader.Read())
-                                {
-                                    Productos producto = new Productos();
+                            cmd.CommandType = CommandType.Text;
+                            cmd.Transaction = transaction;
 
-                                    producto.Id = reader.GetInt32(0);
-                                    producto.Descripcion = reader.GetString(1);
-                                    producto.PrecioUnitario = reader.GetDecimal(2);
+                            cmd.Parameters.AddWithValue("@Id", id);
 
-                                    return producto;
-                                }
-                            }
+                            cmd.ExecuteNonQuery();
+                            transaction.Commit();
                         }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw new Exception(ex.Message);
+                        }
+
                     }
                 }
-
-                return null;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
     }
 
 }
