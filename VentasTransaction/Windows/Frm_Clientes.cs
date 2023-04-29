@@ -77,7 +77,7 @@ namespace VentasTransaction
         {
 
         }
-        // Mostrar datos de la tabla //
+
         private void Form2_Load(object sender, EventArgs e)
         {   
 
@@ -95,6 +95,7 @@ namespace VentasTransaction
             if (!string.IsNullOrEmpty(cliente))
             {
                 ActualizarCliente(cliente);
+                ObtenerClientes();
                 MessageBox.Show("Cliente Actualizado");
             }
             else
@@ -115,6 +116,12 @@ namespace VentasTransaction
                     Clientes cliente = new Clientes();
                     cliente.EliminarCliente(clienteId);
                     ObtenerClientes();
+                    MessageBox.Show("Cliente Eliminado");
+                }
+                else
+                {
+                    MessageBox.Show("¡ERROR! no se elimino el cliente");
+
                 }
             }
             catch (Exception ex)
@@ -129,8 +136,11 @@ namespace VentasTransaction
             string cliente = textBox2.Text;
             if (!string.IsNullOrEmpty(cliente))
             {
+
                 AgregarCliente(cliente);
+                ObtenerClientes();
                 MessageBox.Show("Cliente Registrado");
+                
             }
             else
             {

@@ -108,37 +108,8 @@ namespace AccesoDatos
                 throw new Exception(ex.Message);
             }
         }
-        // Actualizar datos del Cliente //
-        //public void ActualizarCliente(Clientes cliente)
-        //{
-        //    try
-        //    {
-        //        // Query para Actualizar un cliente //
-        //        string query = "UPDATE Clientes SET Nombre = @Nombre";
 
-        //        using (SqlConnection con = new SqlConnection(query))
-        //        {
-        //            SqlTransaction transaction = con.BeginTransaction();
-        //            con.Open();
-
-        //            using (SqlCommand cmd = new SqlCommand(query, con))
-        //            {
-        //                cmd.CommandType = CommandType.Text;
-        //                cmd.Transaction = transaction;
-
-        //                cmd.Parameters.AddWithValue("@Nombre", cliente.Nombre);
-
-        //                cmd.ExecuteNonQuery();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
-        //    }
-        //}
-
-
+        // Actualizado Cliente //
         public void Ac(Clientes cliente)
         {
             try

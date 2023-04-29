@@ -16,6 +16,22 @@ namespace AccesoDatos
         public decimal PrecioUnitario { get; set; }
 
         // Metodos De Producto (Crear, Actualizar, Eliminar) //
+
+        // Datos Tabla Clientes //
+        public SqlDataAdapter ObtenerProductos()
+        {
+            try
+            {
+                string query = "SELECT * FROM Productos";
+                SqlDataAdapter productos = new SqlDataAdapter(query, Conexion.ConnectionString);
+
+                return productos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public void CrearProducto(Productos producto)
         {
             try
