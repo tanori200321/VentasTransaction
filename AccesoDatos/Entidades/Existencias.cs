@@ -14,6 +14,21 @@ namespace AccesoDatos
         public decimal Existencia { get; set; }
         public int ProductoId { get; set; }
 
+        // Datos Tabla Clientes //
+        public SqlDataAdapter ObtenerExistencias()
+        {
+            try
+            {
+                string query = "SELECT * FROM Existencias";
+                SqlDataAdapter clientes = new SqlDataAdapter(query, Conexion.ConnectionString);
+
+                return clientes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public void ActualizarExistencia(SqlConnection con, SqlTransaction transaction, VentaDetalle concepto)
         {
             string query = "Update Existencias " +

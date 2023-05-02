@@ -82,7 +82,6 @@ namespace AccesoDatos
                 throw new Exception(e.Message);
             }
         }
-
         // Actualizar Producto //
         public void ActualizarProducto(Productos producto)
         {
@@ -92,29 +91,40 @@ namespace AccesoDatos
 
                 using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
+                    SqlTransaction transaction;
                     con.Open();
-                    SqlTransaction transaction = con.BeginTransaction();
-
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    transaction = con.BeginTransaction();
+                    try
                     {
-                        cmd.CommandType = CommandType.Text;
-                        cmd.Transaction = transaction;
+                        using (SqlCommand cmd = new SqlCommand(query, con))
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.Transaction = transaction;
 
-                        cmd.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
-                        cmd.Parameters.AddWithValue("@PrecioUnitario", producto.PrecioUnitario);
-                        cmd.Parameters.AddWithValue("@Id", producto.Id);
+                            cmd.Parameters.AddWithValue("@Descripcion", producto.Descripcion);
+                            cmd.Parameters.AddWithValue("@PrecioUnitario", producto.PrecioUnitario);
+                            cmd.Parameters.AddWithValue("@Id", producto.Id);
 
-                        cmd.ExecuteNonQuery();
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                            if (rowsAffected == 0)
+                            {
+                                throw new Exception("El producto no existe");
+                            }
+                        }
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw new Exception(ex.Message);
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new Exception(ex.Message);
+                throw new Exception(e.Message);
             }
         }
-
-        // Eliminar Producto //
         public void EliminarProducto(int id)
         {
             try

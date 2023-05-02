@@ -1,5 +1,6 @@
 ﻿using AccesoDatos;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace VentasTransaction
 {
@@ -17,6 +19,58 @@ namespace VentasTransaction
         public Frm_Existencias()
         {
             InitializeComponent();
+
+            try
+            {
+                ObtenerExistencias();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        // --------------- Llamado de Metodos --------------- //
+
+        // Agregado de Producto //
+        private void CrearProductos(string Descripcion, decimal PrecioUnitario)
+        {
+            Productos producto = new Productos();
+            producto.Descripcion = Descripcion;
+            producto.PrecioUnitario = PrecioUnitario;
+            producto.CrearProducto(producto);
+
+
+
+        }
+        // Borrado de Producto //
+        private void EliminarProducto(int Id)
+        {
+            Productos producto = new Productos();
+            producto.Id = Id;
+            producto.EliminarProducto(Id);
+
+
+        }
+        // Actualizacion de Producto //
+        private void ActualizarProductos(int Id, string Descripcion, decimal PrecioUnitario)
+        {
+            Productos producto = new Productos();
+            producto.Id = Id;
+            producto.Descripcion = Descripcion;
+            producto.PrecioUnitario = PrecioUnitario;
+
+            // Aquí se llama al método ActualizarProducto de la clase Producto
+            producto.ActualizarProducto(producto);
+        }
+        // Mostrar Datos de la tabla //
+        private void ObtenerExistencias()
+        {
+            Existencias exi = new Existencias();
+            SqlDataAdapter adapter = exi.ObtenerExistencias();
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+            dataGridView1.DataSource = dt;
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -31,11 +85,6 @@ namespace VentasTransaction
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            string consulta = "select * from existencias";
-            SqlDataAdapter adapter = new SqlDataAdapter(consulta, Conexion.ConnectionString);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-            dataGridView1.DataSource = dt;
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -43,19 +92,83 @@ namespace VentasTransaction
             
         }
 
+        // Actualizar Producto //
         private void button3_Click(object sender, EventArgs e)
         {
+            try
+            {
+                int productoId;
+                if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out productoId))
+                {
+                    string descripcion = textBox2.Text;
+                    decimal precioUnitario;
+                    if (decimal.TryParse(textBox3.Text, out precioUnitario))
+                    {
+                        Productos producto = new Productos();
+                        producto.Id = productoId;
+                        producto.Descripcion = descripcion;
+                        producto.PrecioUnitario = precioUnitario;
+                        producto.ActualizarProducto(producto);
 
+                        ObtenerExistencias();
+                        MessageBox.Show("Producto Actualizado");
+                    }
+                    else
+                    {
+                        MessageBox.Show("¡ERROR! Precio unitario no válido");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("¡ERROR! No se pudo actualizar el producto");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
+            }
         }
 
+        // Eliminar Producto //
         private void button2_Click(object sender, EventArgs e)
         {
+            try
+            {
+                int Id;
+                if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out Id))
+                {
+                    Productos producto = new Productos();
+                    producto.EliminarProducto(Id);
+                    ObtenerExistencias();
+                    MessageBox.Show("Producto Eliminado");
+                }
+                else
+                {
+                    MessageBox.Show("¡ERROR! no se elimino el Producto");
 
+                }
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
+        // Agregar Producto //
         private void button1_Click(object sender, EventArgs e)
         {
+            string descripcion = textBox2.Text;
+            decimal PrecioUnitario;
 
+            if (!string.IsNullOrEmpty(descripcion) && decimal.TryParse(textBox3.Text, out PrecioUnitario))
+            {
+                CrearProductos(descripcion, PrecioUnitario);
+                ObtenerExistencias();
+                MessageBox.Show("Producto Registrado");
+            }
+            else
+            {
+                MessageBox.Show("¡ERROR! No se pudo registrar el producto");
+            }
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)
@@ -83,11 +196,11 @@ namespace VentasTransaction
 
         }
 
+        // Seleccionar dato //
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            //textBox1.Text = dataGridView1.SelectedCells[0].Value.ToString();
-            //textBox2.Text = dataGridView1.SelectedCells[1].Value.ToString();
-            //textBox3.Text = dataGridView1.SelectedCells[2].Value.ToString();
+            textBox2.Text = dataGridView1.SelectedCells[1].Value.ToString();
+            textBox3.Text = dataGridView1.SelectedCells[2].Value.ToString();
 
         }
     }
