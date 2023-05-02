@@ -110,12 +110,12 @@ namespace AccesoDatos
         }
 
         // Actualizado Cliente //
-        public void Ac(Clientes cliente)
+        public void ActualizarCliente(Clientes cliente)
         {
             try
             {
-                // Query para insertar un cliente nuevo //
-                string query = "UPDATE Clientes SET Nombre = @Nombre";
+                // Query para Actualizar un cliente //
+                string query = "UPDATE Clientes SET Nombre = @Nombre WHERE Id= @Id";
 
                 using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
@@ -127,6 +127,8 @@ namespace AccesoDatos
                         {
                             cmd.CommandType = CommandType.Text;
                             cmd.Transaction = transaction;
+
+                            cmd.Parameters.AddWithValue("@Id", cliente.Id);
                             cmd.Parameters.AddWithValue("@Nombre", cliente.Nombre);
                             cmd.ExecuteNonQuery();
                         }
@@ -135,15 +137,12 @@ namespace AccesoDatos
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        throw new Exception(ex.Message);
                     }
 
                 }
-
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.Message);
             }
         }

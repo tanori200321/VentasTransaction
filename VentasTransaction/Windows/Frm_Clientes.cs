@@ -50,15 +50,16 @@ namespace VentasTransaction
 
         }
         // Actualizacion de Cliente //
-        private void ActualizarCliente(string Nombre)
+        private void ActualizarClientes(int Id, string Nombre)
         {
             Clientes cliente = new Clientes();
+            cliente.Id = Id;
             cliente.Nombre = Nombre;
-            cliente.Ac(cliente);
+            cliente.ActualizarCliente(cliente);
 
 
         }
-        // Mostrar Datos de la tabla //
+        //Mostrar Datos de la tabla //
         private void ObtenerClientes()
         {
             Clientes cliente = new Clientes();
@@ -91,17 +92,31 @@ namespace VentasTransaction
         // Actualizacion de Cliente //
         private void button3_Click(object sender, EventArgs e)
         {
-            string cliente = textBox2.Text;
-            if (!string.IsNullOrEmpty(cliente))
+            try
             {
-                ActualizarCliente(cliente);
-                ObtenerClientes();
-                MessageBox.Show("Cliente Actualizado");
+                int clienteId;
+                if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out clienteId))
+                {
+                    // Aquí se obtienen los valores actualizados de los campos de cliente
+                    string nombre = textBox2.Text;
+
+                    // Aquí se llama a una función que actualiza el cliente en la base de datos
+                    ActualizarClientes(clienteId, nombre);
+
+                    // Aquí se actualiza el DataGridView con los datos actualizados
+                    ObtenerClientes();
+                    MessageBox.Show("Cliente Actualizado");
+                }
+                else
+                {
+                    MessageBox.Show("¡ERROR! no se pudo actualizar el cliente");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("¡ERROR! no se pudo actualizar el cliente");
+                // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
             }
+
 
         }
 
@@ -113,10 +128,10 @@ namespace VentasTransaction
                 int clienteId;
                 if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out clienteId))
                 {
-                    Clientes cliente = new Clientes();
-                    cliente.EliminarCliente(clienteId);
+                    EliminarCliente(clienteId);
                     ObtenerClientes();
                     MessageBox.Show("Cliente Eliminado");
+
                 }
                 else
                 {
