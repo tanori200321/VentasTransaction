@@ -19,6 +19,20 @@ namespace AccesoDatos
         public decimal Importe { get; set; }
 
 
+        public SqlDataAdapter ObtenerVentaDetalle()
+        {
+            try
+            {
+                string query = "SELECT * FROM VentasDetalles";
+                SqlDataAdapter clientes = new SqlDataAdapter(query, Conexion.ConnectionString);
+
+                return clientes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public void GuardarConceptos(SqlConnection con, SqlTransaction transaction, VentaDetalle concepto)
         {
             try

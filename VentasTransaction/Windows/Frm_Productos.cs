@@ -33,9 +33,12 @@ namespace VentasTransaction
         // --------------- Llamado de Metodos --------------- //
 
         // Agregado de Producto //
-        private void CrearProducto(string Nombre)
+        private void CrearProductos(string Descripcion, decimal PrecioUnitario)
         {
             Productos producto = new Productos();
+            producto.Descripcion = Descripcion;
+            producto.PrecioUnitario = PrecioUnitario;
+            producto.CrearProducto(producto);
 
 
 
@@ -50,14 +53,15 @@ namespace VentasTransaction
 
         }
         // Actualizacion de Producto //
-        private void ActualizarProducto(string Descripcion, decimal PrecioUnitario)
+        private void ActualizarProductos(int Id, string Descripcion, decimal PrecioUnitario)
         {
             Productos producto = new Productos();
+            producto.Id = Id;
             producto.Descripcion = Descripcion;
             producto.PrecioUnitario = PrecioUnitario;
+
+            // Aquí se llama al método ActualizarProducto de la clase Producto
             producto.ActualizarProducto(producto);
-
-
         }
         // Mostrar Datos de la tabla //
         private void ObtenerProductos()
@@ -91,7 +95,38 @@ namespace VentasTransaction
         // Actualizar Producto //
         private void button3_Click(object sender, EventArgs e)
         {
+            try
+            {
+                int productoId;
+                if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out productoId))
+                {
+                    string descripcion = textBox2.Text;
+                    decimal precioUnitario;
+                    if (decimal.TryParse(textBox3.Text, out precioUnitario))
+                    {
+                        Productos producto = new Productos();
+                        producto.Id = productoId;
+                        producto.Descripcion = descripcion;
+                        producto.PrecioUnitario = precioUnitario;
+                        producto.ActualizarProducto(producto);
 
+                        ObtenerProductos();
+                        MessageBox.Show("Producto Actualizado");
+                    }
+                    else
+                    {
+                        MessageBox.Show("¡ERROR! Precio unitario no válido");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("¡ERROR! No se pudo actualizar el producto");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
+            }
         }
 
         // Eliminar Producto //
@@ -121,11 +156,19 @@ namespace VentasTransaction
         // Agregar Producto //
         private void button1_Click(object sender, EventArgs e)
         {
-            Productos producto = new Productos();
-            producto.Descripcion = "Producto de ejemplo";
-            producto.PrecioUnitario = 100.0m;
+            string descripcion = textBox2.Text;
+            decimal PrecioUnitario;
 
-            producto.CrearProducto(producto);
+            if (!string.IsNullOrEmpty(descripcion) && decimal.TryParse(textBox3.Text, out PrecioUnitario))
+            {
+                CrearProductos(descripcion, PrecioUnitario);
+                ObtenerProductos();
+                MessageBox.Show("Producto Registrado");
+            }
+            else
+            {
+                MessageBox.Show("¡ERROR! No se pudo registrar el producto");
+            }
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)

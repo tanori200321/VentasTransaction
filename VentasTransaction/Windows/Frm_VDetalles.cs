@@ -17,8 +17,26 @@ namespace VentasTransaction
         public Frm_VDetalles()
         {
             InitializeComponent();
+
+            try
+            {
+                ObtenerVentasDetalles();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
+        // Datos Tabla Clientes //
+        private void ObtenerVentasDetalles()
+        {
+            VentaDetalle ventad = new VentaDetalle();
+            SqlDataAdapter adapter = ventad.ObtenerVentaDetalle();
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+            dataGridView1.DataSource = dt;
+        }
         private void label3_Click(object sender, EventArgs e)
         {
 
@@ -31,11 +49,7 @@ namespace VentasTransaction
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            string consulta = "select * from ventasdetalles";
-            SqlDataAdapter adapter = new SqlDataAdapter(consulta, Conexion.ConnectionString);
-            DataTable dt = new DataTable();
-            adapter.Fill(dt);
-            dataGridView1.DataSource = dt;
+            ObtenerVentasDetalles();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

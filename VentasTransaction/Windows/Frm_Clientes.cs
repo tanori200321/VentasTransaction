@@ -97,13 +97,9 @@ namespace VentasTransaction
                 int clienteId;
                 if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out clienteId))
                 {
-                    // Aquí se obtienen los valores actualizados de los campos de cliente
+
                     string nombre = textBox2.Text;
-
-                    // Aquí se llama a una función que actualiza el cliente en la base de datos
                     ActualizarClientes(clienteId, nombre);
-
-                    // Aquí se actualiza el DataGridView con los datos actualizados
                     ObtenerClientes();
                     MessageBox.Show("Cliente Actualizado");
                 }
