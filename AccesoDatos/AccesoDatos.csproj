@@ -46,7 +46,7 @@
     <Compile Include="Conexion\Conexion.cs" />
     <Compile Include="Entidades\Existencias.cs" />
     <Compile Include="Entidades\Folios.cs" />
-    <Compile Include="Codigo\Metodos.cs" />
+    <Compile Include="Codigo Copia\Metodos.cs" />
     <Compile Include="Entidades\Productos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entidades\Venta.cs" />
