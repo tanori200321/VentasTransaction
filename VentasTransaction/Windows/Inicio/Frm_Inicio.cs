@@ -82,16 +82,42 @@ namespace VentasTransaction
 
         private void button4_Click(object sender, EventArgs e)
         {
-            try
+ try
             {
+                Venta venta = new Venta();
+                venta.ClienteId = 1;
+
+                VentaDetalle producto1 = new VentaDetalle();
+                producto1.ProductoId = 1;
+                producto1.Cantidad = 1;
+                producto1.Descripcion = "Azucar kg";
+                producto1.PrecioUnitario = 27.00m;
+                producto1.Importe = producto1.Cantidad * producto1.PrecioUnitario;
+                venta.Conceptos.Add(producto1);
+
+                VentaDetalle producto2 = new VentaDetalle();
+                producto2.ProductoId = 2;
+                producto2.Cantidad = 1;
+                producto2.Descripcion = "Jugo Mango";
+                producto2.PrecioUnitario = 10.00m;
+                producto2.Importe = producto2.Cantidad * producto2.PrecioUnitario;
+                venta.Conceptos.Add(producto2);
+
+                venta.Total = producto1.Importe + producto2.Importe;
+                venta.crearVenta(venta);
 
             }
             catch (Exception ex)
             {
 
-                MessageBox.Show($"¡ERROR! {ex.Message}");
+                MessageBox.Show($"Ocurrio un error al guardar la venta {ex.Message}");
             }
+
+
+
+            MessageBox.Show("La venta se ha realizado con éxito");
         }
+        
 
         private void button6_Click(object sender, EventArgs e)
         {

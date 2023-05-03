@@ -44,22 +44,13 @@ namespace AccesoDatos
 
                     try
                     {
-                        string query = "select top(1) Folio from Folios";
-                        int folioActual = 0;
-                        using (SqlCommand cmd = new SqlCommand(query, con))
-                        {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Transaction = transaction;
+                        Folios folio = new Folios();
+                        int folioActual = folio.ObtenerFolio(con, transaction);
 
-                            if (!int.TryParse(cmd.ExecuteScalar().ToString(), out folioActual))
-                            {
-                                throw new Exception("Ocurrio un error al obtener el folio");
-                            }
-                        }
+                        venta.Folio = folioActual + 1;
+                        venta.Fecha = DateTime.Now;
 
-
-
-                        query = "INSERT INTO Ventas " +
+                        string query = "INSERT INTO Ventas " +
                             "(Folio,Fecha,ClienteId,Total) " +
                             "VALUES " +
                             "(@Folio,@Fecha,@ClienteId,@Total);select scope_identity()";
@@ -73,8 +64,10 @@ namespace AccesoDatos
                             cmd.Parameters.AddWithValue("@ClienteId", venta.ClienteId);
                             cmd.Parameters.AddWithValue("@Total", venta.Total);
 
+                            string ejecutaQuery = cmd.ExecuteScalar().ToString();
+                            bool sePudoConvertir = int.TryParse(ejecutaQuery, out int idVenta);
 
-                            if (!int.TryParse(cmd.ExecuteScalar().ToString(), out int idVenta))
+                            if (!sePudoConvertir)
                             {
                                 throw new Exception("Ocurrio un error al obtener el id de la venta");
                             }
@@ -83,59 +76,17 @@ namespace AccesoDatos
 
                         foreach (VentaDetalle concepto in venta.Conceptos)
                         {
+                            concepto.VentaId = venta.Id;
+                            concepto.GuardarConceptos(con, transaction, concepto);
 
-                            query = "INSERT INTO VentasDetalle" +
-                                    "(VentaId,ProductoId,Cantidad,Descripcion,PrecioUnitario,Importe) " +
-                                    "VALUES" +
-                                    "(@VentaId,@ProductoId,@Cantidad,@Descripcion,@PrecioUnitario,@Importe)";
-
-                            using (SqlCommand cmd = new SqlCommand(query, con))
-                            {
-                                cmd.CommandType = CommandType.Text;
-                                cmd.Transaction = transaction;
-
-                                cmd.Parameters.AddWithValue("@VentaId", venta.Id);
-                                cmd.Parameters.AddWithValue("@ProductoId", concepto.ProductoId);
-                                cmd.Parameters.AddWithValue("@Cantidad", concepto.Cantidad);
-                                cmd.Parameters.AddWithValue("@Descripcion", concepto.Descripcion);
-                                cmd.Parameters.AddWithValue("@PrecioUnitario", concepto.PrecioUnitario);
-                                cmd.Parameters.AddWithValue("@Importe", concepto.Importe);
-                                cmd.ExecuteNonQuery();
-
-                            }
-
-
-                            query = "UPDATE Existencias " +
-                                    "SET Existencia -= @Cantidad " +
-                                    "WHERE ProductoId = @ProductoId";
-
-                            using (SqlCommand cmd = new SqlCommand(query, con))
-                            {
-                                cmd.CommandType = CommandType.Text;
-                                cmd.Transaction = transaction;
-
-                                cmd.Parameters.AddWithValue("@ProductoId", concepto.ProductoId);
-                                cmd.Parameters.AddWithValue("@Cantidad", concepto.Cantidad);
-                                cmd.ExecuteNonQuery();
-                            }
+                            Existencias existencia = new Existencias();
+                            existencia.Id = concepto.ProductoId;
+                            existencia.Existencia = concepto.Cantidad - concepto.Importe;
+                            existencia.ActualizarExistencia(existencia.Id, existencia.Existencia);
                         }
 
-                        query = "Update Folios set Folio = Folio + 1 ";
-
-                        using (SqlCommand cmd = new SqlCommand(query, con))
-                        {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Transaction = transaction;
-
-                            cmd.ExecuteNonQuery();
-                        }
-
-
-
+                        folio.ActualizarFolio(con, transaction);
                         transaction.Commit();
-
-                        //MessageBox.Show($"Venta guardada correctamente con folio {venta.Folio}");
-
                     }
                     catch (Exception ex)
                     {
@@ -143,12 +94,10 @@ namespace AccesoDatos
                         throw new Exception(ex.Message);
                     }
                 }
-
             }
             catch (Exception ex)
             {
-
-                //MessageBox.Show($"Ocurrio un error al guardar la venta {ex.Message}");
+                throw new Exception(ex.Message);
             }
         }
 

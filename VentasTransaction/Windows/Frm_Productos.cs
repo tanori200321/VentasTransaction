@@ -123,7 +123,7 @@ namespace VentasTransaction
                     MessageBox.Show("¡ERROR! No se pudo actualizar el producto");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
             }
@@ -148,7 +148,7 @@ namespace VentasTransaction
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
             }
         }

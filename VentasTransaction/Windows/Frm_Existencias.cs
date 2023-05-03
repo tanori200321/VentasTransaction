@@ -1,4 +1,5 @@
 ﻿using AccesoDatos;
+using AccesoDatos.Entidades;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -168,7 +169,7 @@ namespace VentasTransaction
                     MessageBox.Show("¡ERROR! No se pudo actualizar la existencia");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
             }

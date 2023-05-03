@@ -53,7 +53,6 @@ namespace AccesoDatos.Entidades
             {
                 throw new Exception(ex.Message);
             }
-
         }
     }
 

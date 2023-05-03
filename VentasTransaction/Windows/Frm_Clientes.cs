@@ -108,7 +108,7 @@ namespace VentasTransaction
                     MessageBox.Show("¡ERROR! no se pudo actualizar el cliente");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
             }
@@ -135,7 +135,7 @@ namespace VentasTransaction
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
