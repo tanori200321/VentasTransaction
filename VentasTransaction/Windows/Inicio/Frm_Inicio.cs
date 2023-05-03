@@ -36,22 +36,6 @@ namespace VentasTransaction
         }
 
 
-
-        private void Venta(int Id, int Folio, DateTime Fecha, int ClienteId, decimal Total)
-        {
-            Venta v = new Venta();
-            v.Id = Id;
-            v.Folio = Folio;
-            v.Fecha = Fecha;
-            v.ClienteId = ClienteId;
-            v.Total = Total;
-            v.crearVenta(v);
-
-        }
-
-
-
-        //Metodo para Guardar Ventas//
         private void button1_Click(object sender, EventArgs e)
         {
         }
@@ -98,7 +82,15 @@ namespace VentasTransaction
 
         private void button4_Click(object sender, EventArgs e)
         {
-           
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show($"¡ERROR! {ex.Message}");
+            }
         }
 
         private void button6_Click(object sender, EventArgs e)

@@ -34,7 +34,7 @@ namespace AccesoDatos
             try
             {
                 // Query para Actualizar una Existencia //
-                string query = "UPDATE Existencias SET Existencia = @Valor WHERE Id= @Id";
+                string query = "UPDATE Existencias SET Existencias = @Valor WHERE Id= @Id";
 
                 using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
@@ -66,26 +66,19 @@ namespace AccesoDatos
                 throw new Exception(ex.Message);
             }
         }
-        public void AgregarExistenciaEnCero(SqlConnection con, SqlTransaction transaction, int productoId)
-        {
-            string query = "INSERT INTO Existencias (ProductoId, Existencias) " +
-                "VALUES (@ProductoId, @Existencias)";
-            try
-            {
-                using (SqlCommand cmd = new SqlCommand(query, con))
-                {
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Transaction = transaction;
-                    cmd.Parameters.AddWithValue("@ProductoId", productoId);
-                    cmd.Parameters.AddWithValue("@Existencias", 0);
-                    cmd.ExecuteNonQuery();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
 
+        public void AgregarExistenciaEnCero(SqlConnection con, SqlTransaction transaction, int ProductoId)
+        {
+            string query = "Insert Into Existencias (Existencia, ProductoId) VALUES (0, @ProductoId)";
+
+            using (SqlCommand cmd = new SqlCommand(query, con))
+            {
+                cmd.CommandType = CommandType.Text;
+                cmd.Transaction = transaction;
+
+                cmd.Parameters.AddWithValue("@ProductoId", ProductoId);
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

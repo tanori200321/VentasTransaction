@@ -35,8 +35,21 @@ namespace VentasTransaction
         // Actualizacion de Existencias //
         private void ActualizarExistencias(int Id, decimal valor)
         {
+            Existencias existencia = new Existencias();
+            existencia.Id = Id;
+            existencia.Existencia = valor;
+            existencia.ActualizarExistencia(existencia.Id,existencia.Existencia);
 
         }
+
+        //private void ActualizarExistencias()
+        //{
+        //    Existencias existenciaJumex = new Existencias();
+        //    existenciaJumex.Id = 28;
+        //    existenciaJumex.Existencia = 15;
+        //    existenciaJumex.ActualizarExistencia(existenciaJumex.Id, existenciaJumex.Existencia);
+
+        //}
 
         // Mostrar Datos de la tabla //
         private void ObtenerExistencias()
@@ -102,52 +115,64 @@ namespace VentasTransaction
 
         }
 
+        // Seleccionar dato //
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            textBox2.Text = dataGridView1.SelectedCells[1].Value.ToString();
+            textBox1.Text = dataGridView1.SelectedCells[2].Value.ToString();
+
+        }
+        // Actualizar Existencia //
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+           
+
+        }
+
+        private void textBox2_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
 
-        // Seleccionar dato //
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void button1_Click_2(object sender, EventArgs e)
         {
+            try
+            {
+                int Id;
+                if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out Id))
+                {
+                    decimal valor;
+                    if (decimal.TryParse(textBox1.Text, out valor))
+                    {
+                        Existencias existencia = new Existencias();
+                        existencia.Id = Id;
+                        existencia.Existencia = valor;
+                        existencia.ActualizarExistencia(existencia.Id, existencia.Existencia);
 
-
+                        ObtenerExistencias();
+                        MessageBox.Show("Existencia Actualizada");
+                    }
+                    else
+                    {
+                        MessageBox.Show("¡ERROR! Valor de existencia no válido");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("¡ERROR! No se pudo actualizar la existencia");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
+            }
         }
-        // Actualizar Existencia //
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //try
-            //{
-            //    int existenciaId;
-            //    if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out existenciaId))
-            //    {
-            //        decimal valor;
-            //        if (decimal.TryParse(textBox3.Text, out valor))
-            //        {
-            //            Existencias existencia = new Existencias();
-            //            existencia.Id = existenciaId;
-            //            existencia.Existencia = valor;
-            //            existencia.ActualizarExistencia(existencia);
-
-            //            ObtenerExistencias();
-            //            MessageBox.Show("Existencia Actualizada");
-            //        }
-            //        else
-            //        {
-            //            MessageBox.Show("¡ERROR! Valor de existencia no válido");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show("¡ERROR! No se pudo actualizar la existencia");
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
-            //}
-
-        }
-        }
+    }
 }
 
