@@ -33,15 +33,12 @@ namespace VentasTransaction
         // --------------- Llamado de Metodos --------------- //
 
         // Actualizacion de Existencias //
-        private void ActualizarExistencias(int Id, int ProductoId, decimal Existencia)
+        private void ActualizarExistencias(int Id, decimal valor)
         {
-            //Existencias existencia = new Existencias();
-            //existencia.Id = Id;
-            //existencia.ProductoId= ProductoId;  
-            //existencia.Existencia= Existencia;
-            //existencia.ActualizarExistencia(existencia);
-
-
+            Existencias existencia = new Existencias();
+            existencia.Id = Id;
+            existencia.Existencia = valor;
+            existencia.ActualizarExistencia(existencia);
         }
 
         // Mostrar Datos de la tabla //
@@ -51,7 +48,7 @@ namespace VentasTransaction
             SqlDataAdapter adapter = exi.ObtenerExistencias();
             DataTable dt = new DataTable();
             adapter.Fill(dt);
-            ExistenciasGrid.DataSource = dt;
+            dataGridView1.DataSource = dt;
         }
 
         private void label3_Click(object sender, EventArgs e)
@@ -116,16 +113,45 @@ namespace VentasTransaction
         // Seleccionar dato //
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            textBox2.Text = ExistenciasGrid.SelectedCells[1].Value.ToString();
-            textBox3.Text = ExistenciasGrid.SelectedCells[2].Value.ToString();
+            textBox2.Text = dataGridView1.SelectedCells[1].Value.ToString();
+            textBox3.Text = dataGridView1.SelectedCells[2].Value.ToString();
 
         }
-        // Actualizar Producto //
+        // Actualizar Existencia //
         private void button2_Click(object sender, EventArgs e)
         {
+            try
+            {
+                int existenciaId;
+                if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out existenciaId))
+                {
+                    decimal valor;
+                    if (decimal.TryParse(textBox3.Text, out valor))
+                    {
+                        Existencias existencia = new Existencias();
+                        existencia.Id = existenciaId;
+                        existencia.Existencia = valor;
+                        existencia.ActualizarExistencia(existencia);
 
-
+                        ObtenerExistencias();
+                        MessageBox.Show("Existencia Actualizada");
+                    }
+                    else
+                    {
+                        MessageBox.Show("¡ERROR! Valor de existencia no válido");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("¡ERROR! No se pudo actualizar la existencia");
+                }
             }
+            catch (Exception ex)
+            {
+                // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
+            }
+
+        }
         }
 }
 
