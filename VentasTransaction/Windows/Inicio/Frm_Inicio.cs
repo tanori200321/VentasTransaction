@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using AccesoDatos.Entidades;
 
 namespace VentasTransaction
 {
@@ -61,6 +62,12 @@ namespace VentasTransaction
         private void button4_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Frm_Ventas frmventas = new Frm_Ventas();
+            frmventas.Show();
         }
     }
 }

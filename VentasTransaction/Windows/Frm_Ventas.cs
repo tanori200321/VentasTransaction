@@ -1,6 +1,5 @@
 ﻿using AccesoDatos;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,19 +9,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace VentasTransaction
 {
-    public partial class Frm_Existencias : Form
+    public partial class Frm_Ventas: Form
     {
-        public Frm_Existencias()
+        public Frm_Ventas()
         {
             InitializeComponent();
 
             try
             {
-                ObtenerExistencias();
+                ObtenerVentas();
             }
             catch (Exception ex)
             {
@@ -30,30 +28,15 @@ namespace VentasTransaction
             }
         }
 
-        // --------------- Llamado de Metodos --------------- //
-
-        // Actualizacion de Existencias //
-        private void ActualizarExistencias(int Id, int ProductoId, decimal Existencia)
+        // Datos Tabla Clientes //
+        private void ObtenerVentas()
         {
-            //Existencias existencia = new Existencias();
-            //existencia.Id = Id;
-            //existencia.ProductoId= ProductoId;  
-            //existencia.Existencia= Existencia;
-            //existencia.ActualizarExistencia(existencia);
-
-
-        }
-
-        // Mostrar Datos de la tabla //
-        private void ObtenerExistencias()
-        {
-            Existencias exi = new Existencias();
-            SqlDataAdapter adapter = exi.ObtenerExistencias();
+            Venta ventas = new Venta();
+            SqlDataAdapter adapter = ventas.ObtenerVenta();
             DataTable dt = new DataTable();
             adapter.Fill(dt);
-            ExistenciasGrid.DataSource = dt;
+            dataGridView1.DataSource = dt;
         }
-
         private void label3_Click(object sender, EventArgs e)
         {
 
@@ -66,6 +49,7 @@ namespace VentasTransaction
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            ObtenerVentas();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -73,16 +57,16 @@ namespace VentasTransaction
             
         }
 
-
         private void button3_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
 
         }
 
-
-
-        // Agregar Existencia //
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -113,19 +97,10 @@ namespace VentasTransaction
 
         }
 
-        // Seleccionar dato //
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            textBox2.Text = ExistenciasGrid.SelectedCells[1].Value.ToString();
-            textBox3.Text = ExistenciasGrid.SelectedCells[2].Value.ToString();
+
 
         }
-        // Actualizar Producto //
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-
-            }
-        }
+    }
 }
-

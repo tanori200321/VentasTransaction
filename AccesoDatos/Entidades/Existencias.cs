@@ -29,38 +29,63 @@ namespace AccesoDatos
                 throw new Exception(ex.Message);
             }
         }
-        public void ActualizarExistencia(SqlConnection con, SqlTransaction transaction, VentaDetalle concepto)
+        public void ActualizarExistencia(int id, decimal valor)
         {
-            string query = "Update Existencias " +
-                    "set Existencia = Existencia-@Cantidad " +
-                    "where ProductoId = @ProductoId";
-
-            using (SqlCommand cmd = new SqlCommand(query, con))
+            try
             {
-                cmd.CommandType = CommandType.Text;
-                cmd.Transaction = transaction;
+                // Query para Actualizar una Existencia //
+                string query = "UPDATE Existencias SET Existencia = @Valor WHERE Id= @Id";
 
-                cmd.Parameters.AddWithValue("@ProductoId", concepto.ProductoId);
-                cmd.Parameters.AddWithValue("@Cantidad", concepto.Cantidad);
-                cmd.ExecuteNonQuery();
+                using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
+                {
+                    con.Open();
+                    SqlTransaction transaction = con.BeginTransaction();
+                    try
+                    {
+                        using (SqlCommand cmd = new SqlCommand(query, con))
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.Transaction = transaction;
+
+                            cmd.Parameters.AddWithValue("@Valor", valor);
+                            cmd.Parameters.AddWithValue("@Id", id);
+
+                            cmd.ExecuteNonQuery();
+                        }
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                    }
+
+                }
             }
-
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
         public void AgregarExistenciaEnCero(SqlConnection con, SqlTransaction transaction, int productoId)
         {
-            string query = "Insert into Existencias (Existencia, ProductoId) +" +
-                "VALUES (0, ProductoId)";
-
-            using (SqlCommand cmd = new SqlCommand(query, con))
+            string query = "INSERT INTO Existencias (ProductoId, Existencia) " +
+                "VALUES (@ProductoId, @Existencia)";
+            try
             {
-                cmd.CommandType = CommandType.Text; cmd.Transaction = transaction;
-
-                cmd.Parameters.AddWithValue("@ProductoId", productoId);
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Transaction = transaction;
+                    cmd.Parameters.AddWithValue("@ProductoId", productoId);
+                    cmd.Parameters.AddWithValue("@Existencia", 0);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
         }
-
-
     }
-
 }

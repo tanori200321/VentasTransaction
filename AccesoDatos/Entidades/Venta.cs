@@ -18,6 +18,20 @@ namespace AccesoDatos
         public decimal Total { get; set; }
         public List<VentaDetalle> Conceptos { get; set; } = new List<VentaDetalle>();
 
+        public SqlDataAdapter ObtenerVenta()
+        {
+            try
+            {
+                string query = "SELECT * FROM Ventas";
+                SqlDataAdapter clientes = new SqlDataAdapter(query, Conexion.ConnectionString);
+
+                return clientes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public void crearVenta(Venta venta)
         {
             try
