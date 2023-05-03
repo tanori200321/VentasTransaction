@@ -68,8 +68,8 @@ namespace AccesoDatos
         }
         public void AgregarExistenciaEnCero(SqlConnection con, SqlTransaction transaction, int productoId)
         {
-            string query = "INSERT INTO Existencias (ProductoId, Existencia) " +
-                "VALUES (@ProductoId, @Existencia)";
+            string query = "INSERT INTO Existencias (ProductoId, Existencias) " +
+                "VALUES (@ProductoId, @Existencias)";
             try
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -77,7 +77,7 @@ namespace AccesoDatos
                     cmd.CommandType = CommandType.Text;
                     cmd.Transaction = transaction;
                     cmd.Parameters.AddWithValue("@ProductoId", productoId);
-                    cmd.Parameters.AddWithValue("@Existencia", 0);
+                    cmd.Parameters.AddWithValue("@Existencias", 0);
                     cmd.ExecuteNonQuery();
                 }
             }

@@ -45,8 +45,8 @@ namespace AccesoDatos
 
                 using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
-                    SqlTransaction transaction;
                     con.Open();
+                    SqlTransaction transaction;
                     transaction = con.BeginTransaction();
                     try
                     {
