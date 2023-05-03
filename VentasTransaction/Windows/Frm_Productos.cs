@@ -100,13 +100,13 @@ namespace VentasTransaction
                 int productoId;
                 if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out productoId))
                 {
-                    string descripcion = textBox2.Text;
+                    string Descripcion = textBox2.Text;
                     decimal precioUnitario;
                     if (decimal.TryParse(textBox3.Text, out precioUnitario))
                     {
                         Productos producto = new Productos();
                         producto.Id = productoId;
-                        producto.Descripcion = descripcion;
+                        producto.Descripcion = Descripcion;
                         producto.PrecioUnitario = precioUnitario;
                         producto.ActualizarProducto(producto);
 
@@ -156,12 +156,12 @@ namespace VentasTransaction
         // Agregar Producto //
         private void button1_Click(object sender, EventArgs e)
         {
-            string descripcion = textBox2.Text;
+            string Descripcion = textBox2.Text;
             decimal PrecioUnitario;
 
-            if (!string.IsNullOrEmpty(descripcion) && decimal.TryParse(textBox3.Text, out PrecioUnitario))
+            if (!string.IsNullOrEmpty(Descripcion) && decimal.TryParse(textBox3.Text, out PrecioUnitario))
             {
-                CrearProductos(descripcion, PrecioUnitario);
+                CrearProductos(Descripcion, PrecioUnitario);
                 ObtenerProductos();
                 MessageBox.Show("Producto Registrado");
             }

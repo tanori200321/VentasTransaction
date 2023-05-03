@@ -77,9 +77,9 @@ namespace AccesoDatos
                 }
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new Exception(e.Message);
+                throw new Exception(ex.Message);
             }
         }
         // Actualizar Producto //

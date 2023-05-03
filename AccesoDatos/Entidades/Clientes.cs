@@ -44,22 +44,12 @@ namespace AccesoDatos
                 using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
                     con.Open();
-                    SqlTransaction transaction = con.BeginTransaction();
-                    try
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
-                        using (SqlCommand cmd = new SqlCommand(query, con))
-                        {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Transaction = transaction;
-                            cmd.Parameters.AddWithValue("@Nombre", cliente.Nombre);
-                            cmd.ExecuteNonQuery();
-                        }
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw new Exception(ex.Message);
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@Nombre", cliente.Nombre);
+                        cmd.ExecuteNonQuery();
                     }
 
                 }
@@ -82,25 +72,14 @@ namespace AccesoDatos
                 using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
                     con.Open();
-                    SqlTransaction transaction = con.BeginTransaction();
-                    try
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
-                        using (SqlCommand cmd = new SqlCommand(query, con))
-                        {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Transaction = transaction;
+                        cmd.CommandType = CommandType.Text;
 
-                            cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.Parameters.AddWithValue("@Id", id);
 
-                            cmd.ExecuteNonQuery();
-                        }
-                        transaction.Commit();
+                        cmd.ExecuteNonQuery();
                     }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                    }
-
                 }
             }
             catch (Exception ex)
@@ -120,23 +99,13 @@ namespace AccesoDatos
                 using (SqlConnection con = new SqlConnection(Conexion.ConnectionString))
                 {
                     con.Open();
-                    SqlTransaction transaction = con.BeginTransaction();
-                    try
+                    using (SqlCommand cmd = new SqlCommand(query, con))
                     {
-                        using (SqlCommand cmd = new SqlCommand(query, con))
-                        {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Transaction = transaction;
+                        cmd.CommandType = CommandType.Text;
 
-                            cmd.Parameters.AddWithValue("@Id", cliente.Id);
-                            cmd.Parameters.AddWithValue("@Nombre", cliente.Nombre);
-                            cmd.ExecuteNonQuery();
-                        }
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
+                        cmd.Parameters.AddWithValue("@Id", cliente.Id);
+                        cmd.Parameters.AddWithValue("@Nombre", cliente.Nombre);
+                        cmd.ExecuteNonQuery();
                     }
 
                 }

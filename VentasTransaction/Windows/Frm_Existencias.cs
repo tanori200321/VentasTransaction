@@ -35,10 +35,7 @@ namespace VentasTransaction
         // Actualizacion de Existencias //
         private void ActualizarExistencias(int Id, decimal valor)
         {
-            Existencias existencia = new Existencias();
-            existencia.Id = Id;
-            existencia.Existencia = valor;
-            existencia.ActualizarExistencia(existencia);
+
         }
 
         // Mostrar Datos de la tabla //
@@ -120,36 +117,36 @@ namespace VentasTransaction
         // Actualizar Existencia //
         private void button2_Click(object sender, EventArgs e)
         {
-            try
-            {
-                int existenciaId;
-                if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out existenciaId))
-                {
-                    decimal valor;
-                    if (decimal.TryParse(textBox3.Text, out valor))
-                    {
-                        Existencias existencia = new Existencias();
-                        existencia.Id = existenciaId;
-                        existencia.Existencia = valor;
-                        existencia.ActualizarExistencia(existencia);
+            //try
+            //{
+            //    int existenciaId;
+            //    if (int.TryParse(dataGridView1.SelectedRows[0].Cells[0].Value.ToString(), out existenciaId))
+            //    {
+            //        decimal valor;
+            //        if (decimal.TryParse(textBox3.Text, out valor))
+            //        {
+            //            Existencias existencia = new Existencias();
+            //            existencia.Id = existenciaId;
+            //            existencia.Existencia = valor;
+            //            existencia.ActualizarExistencia(existencia);
 
-                        ObtenerExistencias();
-                        MessageBox.Show("Existencia Actualizada");
-                    }
-                    else
-                    {
-                        MessageBox.Show("¡ERROR! Valor de existencia no válido");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("¡ERROR! No se pudo actualizar la existencia");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
-            }
+            //            ObtenerExistencias();
+            //            MessageBox.Show("Existencia Actualizada");
+            //        }
+            //        else
+            //        {
+            //            MessageBox.Show("¡ERROR! Valor de existencia no válido");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("¡ERROR! No se pudo actualizar la existencia");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    // Aquí se maneja cualquier excepción que pueda ocurrir durante el proceso de actualización
+            //}
 
         }
         }
